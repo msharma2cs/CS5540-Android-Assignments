@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static final String TAG = "NetworkUtils";
     final static String BASE_URL = "https://newsapi.org/v1/articles";
     final static String PARAM_SOURCE = "source";
     final static String PARAM_SOURCE_VALUE = "the-next-web";

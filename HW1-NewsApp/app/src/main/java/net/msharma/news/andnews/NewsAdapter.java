@@ -1,4 +1,92 @@
 package net.msharma.news.andnews;
 
-public class NewsAdapter {
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import net.msharma.news.andnews.models.NewsItem;
+import net.msharma.news.andnews.utils.DateTimeUtils;
+import net.msharma.news.andnews.utils.ImageUtils;
+import java.util.ArrayList;
+
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder> {
+
+    private static final String TAG = "NewsAdapter";
+    Context mContext;
+    ArrayList<NewsItem> mNews;
+
+    public NewsAdapter(Context context, ArrayList<NewsItem> news){
+        this.mContext = context;
+        this.mNews = news;
+    }
+
+    @Override
+    public NewsAdapter.NewsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        boolean shouldAttachToParentImmediately = false;
+
+        View view = inflater.inflate(R.layout.news_item, parent, shouldAttachToParentImmediately);
+        NewsAdapter.NewsItemViewHolder viewHolder = new NewsAdapter.NewsItemViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(NewsAdapter.NewsItemViewHolder holder, int position) {
+        holder.bind(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mNews.size();
+    }
+
+    public class NewsItemViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        TextView author;
+        TextView description;
+        String url;
+        TextView publishedAt;
+        ImageView articleImg;
+
+        public NewsItemViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.title);
+            author = (TextView) itemView.findViewById(R.id.author);
+            description = (TextView) itemView.findViewById(R.id.description);
+            publishedAt = (TextView) itemView.findViewById(R.id.publishedAt);
+            articleImg = (ImageView) itemView.findViewById(R.id.article_img);
+        }
+
+        void bind(final int listIndex) {
+            title.setText("Title : ".concat(mNews.get(listIndex).getTitle()));
+            author.setText("By : ".concat(mNews.get(listIndex).getAuthor()));
+            description.setText("Description : ".concat(mNews.get(listIndex).getDescription()));
+            publishedAt.setText("Date : ".concat(DateTimeUtils.formatDateFromString(mNews.get(listIndex).getPublishedAt())));
+            Log.d(TAG, "URL to Image : " + mNews.get(listIndex).getUrlToImage());
+            articleImg.setImageDrawable( ImageUtils.loadDrawableImageFromWeb(mNews.get(listIndex).getUrlToImage()));
+//            articleImg.setImageBitmap( ImageUtils.loadBitmapImageFromWeb(mNews.get(listIndex).getUrlToImage()));
+            url = mNews.get(listIndex).getUrl();
+
+            // Open news article in browser on click.
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // get the url of clicked article.
+                    String urlString = mNews.get(getAdapterPosition()).getUrl();
+                    // create intent for browser tab.
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+                    // open link in default browser app.
+                    mContext.startActivity(browserIntent);
+                }
+            });
+        }
+    }
+
 }
