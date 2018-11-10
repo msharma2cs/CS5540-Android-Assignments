@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressBar.setVisibility(View.VISIBLE);
-            mAdapter.mNews.clear();
         }
 
         @Override

@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.utils.DateTimeUtils;
@@ -76,11 +74,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
             // Using Picasso library ( http://square.github.io/picasso/ )
             // to load the image from url/web asynchronously into ImageView.
             Picasso
-                .get()
-                .load(mNews.get(listIndex).getUrlToImage())
-                .error(R.drawable.ic_launcher_background)
-                .fit()
-                .into(articleImg);
+                    .get()
+                    .load(mNews.get(listIndex).getUrlToImage())
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .fit()
+                    .into(articleImg);
 
             // Open news article in browser on click.
             itemView.setOnClickListener(new View.OnClickListener() {
