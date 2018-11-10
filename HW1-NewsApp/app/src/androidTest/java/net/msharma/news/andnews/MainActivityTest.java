@@ -43,24 +43,24 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class);
 
     @Before
-    public void setup(){
+    public void setup() {
         onView(withId(R.id.action_search)).perform(click());
     }
 
     @Test
-    public void testRecyclerViewIsDisplayed(){
+    public void testRecyclerViewIsDisplayed() {
         onView(withId(R.id.news_recyclerview)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testRecyclerViewNotEmpty(){
+    public void testRecyclerViewNotEmpty() {
         onView(withRecyclerView(R.id.news_recyclerview)
                 .atPosition(0))
                 .check(matches(hasDescendant(isDisplayed())));
     }
 
     @Test
-    public void testItemsTextViewsHaveRightText(){
+    public void testItemsTextViewsHaveRightText() {
         onView(withRecyclerView(R.id.news_recyclerview)
                 .atPosition(0))
                 .check(matches(hasDescendant(withText(containsString("Title")))));

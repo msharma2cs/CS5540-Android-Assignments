@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private NewsAdapter mAdapter;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 newsSearchResult = NetworkUtils.getResponseFromHttpUrl(newsSearchUrl);
                 newsResults = newsSearchResult;
             } catch (IOException e) {
+                Log.d(TAG, "Main activity news query async IOException.");
                 e.printStackTrace();
             }
             return newsSearchResult;

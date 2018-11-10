@@ -1,6 +1,7 @@
 package net.msharma.news.andnews.utils;
 
 import android.net.Uri;
+import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -9,6 +10,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
+
+    private static final String TAG = "NetworkUtils";
 
     final static String BASE_URL = "https://newsapi.org/v1/articles";
     final static String PARAM_SOURCE = "source";
@@ -29,6 +32,7 @@ public class NetworkUtils {
         try {
             url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
+            Log.d(TAG, "Malformed URL built exception.");
             e.printStackTrace();
         }
 
@@ -51,6 +55,10 @@ public class NetworkUtils {
             } else {
                 return null;
             }
+        } catch ( Exception e ) {
+            Log.d(TAG, "Network connection HTTP exception.");
+            e.printStackTrace();
+            return null;
         } finally {
             urlConnection.disconnect();
         }

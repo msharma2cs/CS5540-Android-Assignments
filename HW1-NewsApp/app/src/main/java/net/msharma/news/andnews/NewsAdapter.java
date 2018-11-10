@@ -4,20 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.utils.DateTimeUtils;
-import net.msharma.news.andnews.utils.ImageUtils;
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder> {
 
     private static final String TAG = "NewsAdapter";
+
     Context mContext;
     ArrayList<NewsItem> mNews;
 
@@ -69,10 +69,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
             author.setText("By : ".concat(mNews.get(listIndex).getAuthor()));
             description.setText("Description : ".concat(mNews.get(listIndex).getDescription()));
             publishedAt.setText("Date : ".concat(DateTimeUtils.formatDateFromString(mNews.get(listIndex).getPublishedAt())));
-            Log.d(TAG, "URL to Image : " + mNews.get(listIndex).getUrlToImage());
-            articleImg.setImageDrawable( ImageUtils.loadDrawableImageFromWeb(mNews.get(listIndex).getUrlToImage()));
-//            articleImg.setImageBitmap( ImageUtils.loadBitmapImageFromWeb(mNews.get(listIndex).getUrlToImage()));
             url = mNews.get(listIndex).getUrl();
+            // Image url comes from 'urlToImage' key in json object of api result.
+            // Using Picasso library ( http://square.github.io/picasso/ )
+            // to load the image from url/web asynchronously into ImageView.
+            Picasso
+                    .get()
+                    .load(mNews.get(listIndex).getUrlToImage())
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .fit()
+                    .into(articleImg);
 
             // Open news article in browser on click.
             itemView.setOnClickListener(new View.OnClickListener() {
