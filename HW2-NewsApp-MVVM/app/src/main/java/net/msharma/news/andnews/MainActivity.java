@@ -1,21 +1,20 @@
 package net.msharma.news.andnews;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import net.msharma.news.andnews.models.NewsItem;
-import net.msharma.news.andnews.utils.JsonUtils;
-import net.msharma.news.andnews.utils.NetworkUtils;
-import java.io.IOException;
-import java.net.URL;
+import net.msharma.news.andnews.viewmodels.NewsItemViewModel;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,8 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private NewsItemViewModel mNewsItemViewModel;
     private NewsAdapter mAdapter;
-    private String newsResults;
+
     private ArrayList<NewsItem> news = new ArrayList<>();
     private static final String SEARCH_QUERY_URL_EXTRA = "searchQuery";
     private static final String SEARCH_QUERY_RESULTS = "searchResults";
@@ -35,23 +35,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
+
         mRecyclerView = (RecyclerView)findViewById(R.id.news_recyclerview);
-        mAdapter = new NewsAdapter(this, news);
+        mNewsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
+        mAdapter = new NewsAdapter(this, mNewsItemViewModel);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        if ( savedInstanceState != null && savedInstanceState.containsKey(SEARCH_QUERY_RESULTS) ) {
-            String searchResults = savedInstanceState.getString(SEARCH_QUERY_RESULTS);
-            populateRecyclerView(searchResults);
-        } else {
-            getAllNews();
-        }
+        mNewsItemViewModel.getAllNewsItem().observe(this, new Observer<List<NewsItem>>() {
+            @Override
+            public void onChanged(@Nullable List<NewsItem> newsItems) {
+                mAdapter.setmNewsItem(newsItems);
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(SEARCH_QUERY_RESULTS, newsResults);
+        outState.putString(SEARCH_QUERY_RESULTS, mNewsItemViewModel.getAllNewsItem().toString());
     }
 
     @Override
@@ -60,25 +61,16 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    public void populateRecyclerView(String searchResults){
-        news = JsonUtils.parseNews(searchResults);
-        mAdapter.mNews.addAll(news);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void getAllNews() {
-        URL url = NetworkUtils.buildURL();
-        Bundle bundle = new Bundle();
-        bundle.putString(SEARCH_QUERY_URL_EXTRA, url.toString());
-        new NewsQueryTask().execute(url);
-    }
-
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.action_search) {
-            getAllNews();
-            return true;
+        if ( itemThatWasClickedId == R.id.action_search ) {
+            mNewsItemViewModel.syncDb();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -87,39 +79,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.get_news, menu);
         return true;
-    }
-
-    public class NewsQueryTask extends AsyncTask<URL, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(URL... params) {
-            Log.d(TAG, "Calling NewsQueryTask doInBackground");
-            URL newsSearchUrl = params[0];
-            String newsSearchResult = null;
-            try {
-                newsSearchResult = NetworkUtils.getResponseFromHttpUrl(newsSearchUrl);
-                newsResults = newsSearchResult;
-            } catch (IOException e) {
-                Log.d(TAG, "Main activity news query async IOException.");
-                e.printStackTrace();
-            }
-            return newsSearchResult;
-        }
-
-        @Override
-        protected void onPostExecute(String newsResult) {
-            mProgressBar.setVisibility(View.GONE);
-
-            if (newsResult != null && !newsResult.equals("")) {
-                populateRecyclerView(newsResult);
-            }
-        }
     }
 
 }

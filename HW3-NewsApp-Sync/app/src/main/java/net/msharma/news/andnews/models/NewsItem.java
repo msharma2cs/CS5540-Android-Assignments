@@ -1,38 +1,14 @@
 package net.msharma.news.andnews.models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "news_item")
 public class NewsItem {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-
-    @ColumnInfo(name = "title")
     private String title;
-
-    @ColumnInfo(name = "author")
     private String author;
-
-    @ColumnInfo(name = "description")
     private String description;
-
-    @ColumnInfo(name = "url")
     private String url;
-
-    @ColumnInfo(name = "url_to_image")
     private String urlToImage;
-
-    @ColumnInfo(name = "published_at")
     private String publishedAt;
 
-    @Ignore
-    public NewsItem() {}
-
-    @Ignore
     public NewsItem(String title, String author, String description, String url, String urlToImage, String publishedAt) {
         this.title = title;
         this.author = author;
@@ -40,20 +16,6 @@ public class NewsItem {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
-    }
-
-    public NewsItem(int id, String title, String author, String description, String url, String urlToImage, String publishedAt) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.url = url;
-        this.urlToImage = urlToImage;
-        this.publishedAt = publishedAt;
-    }
-
-    public int getId() {
-        return this.id;
     }
 
     public String getTitle() {
