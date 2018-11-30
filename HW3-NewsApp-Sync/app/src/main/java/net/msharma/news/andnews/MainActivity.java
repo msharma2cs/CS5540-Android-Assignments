@@ -1,6 +1,9 @@
 package net.msharma.news.andnews;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,9 +16,11 @@ import android.widget.ProgressBar;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.utils.JsonUtils;
 import net.msharma.news.andnews.utils.NetworkUtils;
+import net.msharma.news.andnews.viewmodels.NewsItemViewModel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NewsItem> news = new ArrayList<>();
     private static final String SEARCH_QUERY_URL_EXTRA = "searchQuery";
     private static final String SEARCH_QUERY_RESULTS = "searchResults";
+    private NewsItemViewModel mNewsItemViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +41,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
+
         mRecyclerView = (RecyclerView)findViewById(R.id.news_recyclerview);
         mAdapter = new NewsAdapter(this, news);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if ( savedInstanceState != null && savedInstanceState.containsKey(SEARCH_QUERY_RESULTS) ) {
-            String searchResults = savedInstanceState.getString(SEARCH_QUERY_RESULTS);
-            populateRecyclerView(searchResults);
-        } else {
-            getAllNews();
-        }
+        mNewsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
+        // final NewsAdapter adapter = new NewsAdapter(this, mNewsItemViewModel);
+        mNewsItemViewModel.getAllNewsItem().observe(this, new Observer<List<NewsItem>>() {
+            @Override
+            public void onChanged(@Nullable final List<NewsItem> newsItems) {
+                // Update the cached copy of the words in the adapter.
+                mAdapter.setmNews(newsItems);
+            }
+        });
+
+        //        if ( savedInstanceState != null && savedInstanceState.containsKey(SEARCH_QUERY_RESULTS) ) {
+        //            String searchResults = savedInstanceState.getString(SEARCH_QUERY_RESULTS);
+        //            populateRecyclerView(searchResults);
+        //        } else {
+        //            getAllNews();
+        //        }
     }
 
     @Override

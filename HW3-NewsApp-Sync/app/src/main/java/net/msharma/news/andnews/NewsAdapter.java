@@ -15,13 +15,14 @@ import com.squareup.picasso.Picasso;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.utils.DateTimeUtils;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder> {
 
     private static final String TAG = "NewsAdapter";
 
     Context mContext;
-    ArrayList<NewsItem> mNews;
+    List<NewsItem> mNews;
 
     public NewsAdapter(Context context, ArrayList<NewsItem> news){
         this.mContext = context;
@@ -49,7 +50,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
         return mNews.size();
     }
 
-    public class NewsItemViewHolder extends RecyclerView.ViewHolder {
+    void setmNews(List<NewsItem> newsItems) {
+        mNews = newsItems;
+        notifyDataSetChanged();
+    }
+
+    class NewsItemViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView author;
         TextView description;
