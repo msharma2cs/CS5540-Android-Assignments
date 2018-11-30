@@ -27,9 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private ProgressBar mProgressBar;
-    private RecyclerView mRecyclerView;
     private NewsAdapter mAdapter;
-    private String newsResults;
     private ArrayList<NewsItem> news = new ArrayList<>();
     private static final String SEARCH_QUERY_URL_EXTRA = "searchQuery";
     private static final String SEARCH_QUERY_RESULTS = "searchResults";
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.news_recyclerview);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.news_recyclerview);
         mAdapter = new NewsAdapter(this, news);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -65,17 +63,17 @@ public class MainActivity extends AppCompatActivity {
         //        }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(SEARCH_QUERY_RESULTS, newsResults);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mProgressBar.setVisibility(View.GONE);
-    }
+    //    @Override
+    //    protected void onSaveInstanceState(Bundle outState) {
+    //        super.onSaveInstanceState(outState);
+    //        outState.putString(SEARCH_QUERY_RESULTS, newsResults);
+    //    }
+    //
+    //    @Override
+    //    protected void onResume() {
+    //        super.onResume();
+    //        mProgressBar.setVisibility(View.GONE);
+    //    }
 
     public void populateRecyclerView(String searchResults){
         news = JsonUtils.parseNews(searchResults);
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             String newsSearchResult = null;
             try {
                 newsSearchResult = NetworkUtils.getResponseFromHttpUrl(newsSearchUrl);
-                newsResults = newsSearchResult;
+                String newsResults = newsSearchResult;
             } catch (IOException e) {
                 Log.d(TAG, "Main activity news query async IOException.");
                 e.printStackTrace();
