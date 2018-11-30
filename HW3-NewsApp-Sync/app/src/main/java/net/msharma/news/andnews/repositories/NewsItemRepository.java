@@ -25,7 +25,7 @@ public class NewsItemRepository {
         allNewsItems = newsItemDao.loadAllNewsItems();
     }
 
-    LiveData<List<NewsItem>> getAllNewsItems() {
+    public LiveData<List<NewsItem>> getAllNewsItems() {
         return allNewsItems;
     }
 
