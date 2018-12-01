@@ -21,13 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private ProgressBar mProgressBar;
-    private RecyclerView mRecyclerView;
-    private NewsItemViewModel mNewsItemViewModel;
     private NewsAdapter mAdapter;
-
     private ArrayList<NewsItem> news = new ArrayList<>();
-    private static final String SEARCH_QUERY_URL_EXTRA = "searchQuery";
-    private static final String SEARCH_QUERY_RESULTS = "searchResults";
+    private NewsItemViewModel mNewsItemViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,41 +32,34 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.news_recyclerview);
-        mNewsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
-        mAdapter = new NewsAdapter(this, mNewsItemViewModel);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.news_recyclerview);
+        mAdapter = new NewsAdapter(this, news);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mNewsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
         mNewsItemViewModel.getAllNewsItem().observe(this, new Observer<List<NewsItem>>() {
             @Override
-            public void onChanged(@Nullable List<NewsItem> newsItems) {
-                mAdapter.setmNewsItem(newsItems);
+            public void onChanged(@Nullable final List<NewsItem> newsItems) {
+                mProgressBar.setVisibility(View.GONE);
+                // Update the cached copy of the news in the adapter.
+                mAdapter.setmNews(newsItems);
             }
         });
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(SEARCH_QUERY_RESULTS, mNewsItemViewModel.getAllNewsItem().toString());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     *
-     * @param item
-     * @return
-     */
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        mProgressBar.setVisibility(View.VISIBLE);
         int itemThatWasClickedId = item.getItemId();
-        if ( itemThatWasClickedId == R.id.action_search ) {
+
+        // If refresh was clicked, clear database and fetch new news items.
+        if (itemThatWasClickedId == R.id.action_search) {
             mNewsItemViewModel.syncDb();
+            return true;
+        } else if (itemThatWasClickedId == R.id.action_clear) { // If clear was clicked, clear database only
+            mNewsItemViewModel.clearDb();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

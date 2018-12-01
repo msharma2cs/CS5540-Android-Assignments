@@ -1,13 +1,16 @@
 package net.msharma.news.andnews.utils;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import net.msharma.news.andnews.dao.NewsItemDao;
 import net.msharma.news.andnews.models.NewsItem;
-import androidx.room.Database;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
-@Database(entities = {NewsItem.class}, version = 1)
+/**
+ * News Room Database util class for connection instance.
+ */
+@Database(entities = {NewsItem.class}, version = 1, exportSchema = false)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewsItemDao newsItemDao();
@@ -18,8 +21,7 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (NewsRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), NewsRoomDatabase.class, "news_database")
-                                    .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), NewsRoomDatabase.class, "news_database").build();
                 }
             }
         }

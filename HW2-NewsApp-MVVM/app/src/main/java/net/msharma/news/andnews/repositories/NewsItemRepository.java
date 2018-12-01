@@ -14,44 +14,55 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * News items repository class.
+ */
 public class NewsItemRepository {
 
-    private NewsItemDao mNewsItemDao;
-    private LiveData<List<NewsItem>> mAllNewsItems;
+    private static final String TAG = "NewsItemRepository";
 
-    public NewsItemRepository(Application application){
-        NewsRoomDatabase newsDb = NewsRoomDatabase.getDatabase(application.getApplicationContext());
-        mNewsItemDao = newsDb.newsItemDao();
-        mAllNewsItems = mNewsItemDao.loadAllNewsItems();
+    private NewsItemDao newsItemDao;
+    private LiveData<List<NewsItem>> allNewsItems;
+
+    public NewsItemRepository(Application application) {
+        NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application.getApplicationContext());
+        newsItemDao = db.newsItemDao();
+        allNewsItems = newsItemDao.loadAllNewsItems();
     }
 
-    LiveData<List<NewsItem>> getmAllNewsItems() {
-        return this.mAllNewsItems;
+    // To get all news items from database.
+    public LiveData<List<NewsItem>> getAllNewsItems() {
+        allNewsItems = newsItemDao.loadAllNewsItems();
+        return allNewsItems;
     }
 
-    public LiveData<List<NewsItem>> getAll() {
-        new LoadAllNewsItemAsyncTask(mNewsItemDao).execute();
-        return mAllNewsItems;
-    }
+    /**
+     * AsyncTask subclass to clear the database - clearing all existing news items
+     */
+    //    private static class LoadFromDbNewsItemAsyncTask extends AsyncTask<Void, Void, LiveData<List<NewsItem>>> {
+    //        private NewsItemDao mAsyncTaskNewsItemDao;
+    //
+    //        LoadFromDbNewsItemAsyncTask(NewsItemDao mAsyncTaskNewsItemDao) {
+    //            this.mAsyncTaskNewsItemDao = mAsyncTaskNewsItemDao;
+    //        }
+    //
+    //        @Override
+    //        protected LiveData<List<NewsItem>> doInBackground(Void... voids) {
+    //            Log.d(TAG, "...doing in background ...for LoadFromDbNewsItemAsyncTask");
+    //            Log.d(TAG, "Fetching in LoadFromDbNewsItemAsyncTask : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
+    //            return mAsyncTaskNewsItemDao.loadAllNewsItems();
+    //        }
+    //    }
 
-    public class LoadAllNewsItemAsyncTask extends AsyncTask<Void, Void, LiveData<List<NewsItem>>> {
-        private NewsItemDao mAsyncTaskNewsItemDao;
-
-        LoadAllNewsItemAsyncTask(NewsItemDao mAsyncTaskNewsItemDao) {
-            this.mAsyncTaskNewsItemDao = mAsyncTaskNewsItemDao;
-        }
-
-        @Override
-        protected LiveData<List<NewsItem>> doInBackground(Void... voids) {
-            return mAsyncTaskNewsItemDao.loadAllNewsItems();
-        }
-    }
-
+    // To sync the database using async task.
     public void syncDb() {
-        new SyncDbNewsItemAsyncTask(mNewsItemDao).execute();
+        new SyncDbNewsItemAsyncTask(newsItemDao).execute();
     }
 
-    public class SyncDbNewsItemAsyncTask extends AsyncTask<Void, Void, Void> {
+    /**
+     * AsyncTask subclass to sync the database - clearing all existing news items, fetching from api and persisting in database.
+     */
+    private static class SyncDbNewsItemAsyncTask extends AsyncTask<Void, Void, Void> {
         private NewsItemDao mAsyncTaskNewsItemDao;
 
         SyncDbNewsItemAsyncTask(NewsItemDao mAsyncTaskNewsItemDao) {
@@ -60,8 +71,13 @@ public class NewsItemRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "...doing in background ...for SyncDbNewsItemAsyncTask");
+            Log.d(TAG, "Before clear : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
+
             // clear the database.
             mAsyncTaskNewsItemDao.clearAll();
+
+            Log.d(TAG, "After  clear : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
 
             // Network call to get from API.
             URL newsSearchUrl = NetworkUtils.buildURL();
@@ -69,7 +85,7 @@ public class NewsItemRepository {
             try {
                 newsSearchResult = NetworkUtils.getResponseFromHttpUrl(newsSearchUrl);
             } catch (IOException e) {
-                Log.d("NewsItemRepository", "Main activity news query async IOException.");
+                Log.d(TAG, "SyncDbNewsItemAsyncTask news query async IOException.");
                 e.printStackTrace();
             }
 
@@ -79,6 +95,35 @@ public class NewsItemRepository {
             // persisting in database.
             mAsyncTaskNewsItemDao.insert(newsItems);
 
+            Log.d(TAG, "After insert : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
+            return null;
+        }
+    }
+
+    // To clear the database using async task.
+    public void clearDb() {
+        new ClearDbNewsItemAsyncTask(newsItemDao).execute();
+    }
+
+    /**
+     * AsyncTask subclass to clear the database - clearing all existing news items
+     */
+    private static class ClearDbNewsItemAsyncTask extends AsyncTask<Void, Void, Void> {
+        private NewsItemDao mAsyncTaskNewsItemDao;
+
+        ClearDbNewsItemAsyncTask(NewsItemDao mAsyncTaskNewsItemDao) {
+            this.mAsyncTaskNewsItemDao = mAsyncTaskNewsItemDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "...doing in background ...for ClearDbNewsItemAsyncTask");
+            Log.d(TAG, "Before clear in ClearDbNewsItemAsyncTask : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
+
+            // clear the database.
+            mAsyncTaskNewsItemDao.clearAll();
+
+            Log.d(TAG, "After  clear in ClearDbNewsItemAsyncTask : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
             return null;
         }
     }

@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import net.msharma.news.andnews.jobservices.ScheduleService;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.viewmodels.NewsItemViewModel;
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.setmNews(newsItems);
             }
         });
+
+        ScheduleService.scheduleRefresh(this);
     }
 
     @Override
