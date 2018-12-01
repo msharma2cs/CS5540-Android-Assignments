@@ -2,4 +2,5 @@
     <string name="app_name">news-hw3</string>
     <string name="refresh_menu">Refresh</string>
     <string name="clear_menu">Clear</string>
+    <string name="thumb_img_desc">Thumb image for news article</string>
 </resources>
