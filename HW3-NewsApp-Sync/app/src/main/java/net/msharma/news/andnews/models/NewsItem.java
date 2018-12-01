@@ -5,6 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+/**
+ * News item model class.
+ */
 @Entity(tableName = "news_item")
 public class NewsItem {
 

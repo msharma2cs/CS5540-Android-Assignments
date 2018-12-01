@@ -7,6 +7,9 @@ import android.content.Context;
 import net.msharma.news.andnews.dao.NewsItemDao;
 import net.msharma.news.andnews.models.NewsItem;
 
+/**
+ * News Room Database util class for connection instance.
+ */
 @Database(entities = {NewsItem.class}, version = 1)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 

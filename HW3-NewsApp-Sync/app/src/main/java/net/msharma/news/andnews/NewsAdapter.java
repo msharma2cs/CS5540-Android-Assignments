@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.utils.DateTimeUtils;
@@ -21,8 +19,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
 
     private static final String TAG = "NewsAdapter";
 
-    Context mContext;
-    List<NewsItem> mNews;
+    private Context mContext;
+    private List<NewsItem> mNews;
 
     public NewsAdapter(Context context, ArrayList<NewsItem> news){
         this.mContext = context;

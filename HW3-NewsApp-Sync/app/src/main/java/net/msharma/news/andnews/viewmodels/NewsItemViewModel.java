@@ -7,6 +7,9 @@ import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.repositories.NewsItemRepository;
 import java.util.List;
 
+/**
+ * News items ViewModel
+ */
 public class NewsItemViewModel extends AndroidViewModel {
 
     private NewsItemRepository newsItemRepository;
@@ -18,12 +21,19 @@ public class NewsItemViewModel extends AndroidViewModel {
         allNewsItems = newsItemRepository.getAllNewsItems();
     }
 
+    // To get all news items.
     public LiveData<List<NewsItem>> getAllNewsItem() {
         return allNewsItems;
     }
 
+    // To sync the database.
     public void syncDb() {
         newsItemRepository.syncDb();
+    }
+
+    // To clear the database.
+    public void clearDb() {
+        newsItemRepository.clearDb();
     }
 
 }
