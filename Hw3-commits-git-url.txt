@@ -1,0 +1,8 @@
+Name : Mohit Sharma
+
+Github URL to assignments repo for HW2 : https://github.com/msharma2cs/CS5540-Android-Assignments/tree/master/HW3-NewsApp-Sync
+
+Cloned HW1 project folder to proceed with HW2 and HW3. Initially, I was using the same project folder(HW3-NewsApp-Sync for both HW2 and HW3) and repo for all the assignments.
+Later, I separated out the code meeting all the requirements of HW2 only into HW2-NewsApp-MVVM project folder(from HW3-NewsApp-Sync project folder) in GitHub repo. The zip file uploaded contains complete code, also committed to GitHub repo.
+
+Thanks.
