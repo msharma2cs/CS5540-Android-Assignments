@@ -36,24 +36,6 @@ public class NewsItemRepository {
         return allNewsItems;
     }
 
-    /**
-     * AsyncTask subclass to clear the database - clearing all existing news items
-     */
-    //    private static class LoadFromDbNewsItemAsyncTask extends AsyncTask<Void, Void, LiveData<List<NewsItem>>> {
-    //        private NewsItemDao mAsyncTaskNewsItemDao;
-    //
-    //        LoadFromDbNewsItemAsyncTask(NewsItemDao mAsyncTaskNewsItemDao) {
-    //            this.mAsyncTaskNewsItemDao = mAsyncTaskNewsItemDao;
-    //        }
-    //
-    //        @Override
-    //        protected LiveData<List<NewsItem>> doInBackground(Void... voids) {
-    //            Log.d(TAG, "...doing in background ...for LoadFromDbNewsItemAsyncTask");
-    //            Log.d(TAG, "Fetching in LoadFromDbNewsItemAsyncTask : Items count currently in db = " + mAsyncTaskNewsItemDao.getDataCount());
-    //            return mAsyncTaskNewsItemDao.loadAllNewsItems();
-    //        }
-    //    }
-
     // To sync the database using async task.
     public void syncDb() {
         new SyncDbNewsItemAsyncTask(newsItemDao).execute();

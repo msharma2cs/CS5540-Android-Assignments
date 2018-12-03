@@ -24,12 +24,15 @@
         </activity>
 
         <service
-            android:exported="false"
-            android:name=".jobservices.NewsFireBaseJobService">
+            android:name=".jobservices.NewsFireBaseJobService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
+        <service
+            android:name=".jobservices.NewsIntentService"
+            android:exported="false" />
 
     </application>
 

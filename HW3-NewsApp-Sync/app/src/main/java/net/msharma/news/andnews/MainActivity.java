@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import net.msharma.news.andnews.jobservices.ScheduleService;
 import net.msharma.news.andnews.models.NewsItem;
 import net.msharma.news.andnews.viewmodels.NewsItemViewModel;
@@ -49,19 +48,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ScheduleService.scheduleRefresh(this);
+        ScheduleService.scheduleRefreshJob(this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mProgressBar.setVisibility(View.VISIBLE);
         int itemThatWasClickedId = item.getItemId();
-
-        // If refresh was clicked, clear database and fetch new news items.
-        if (itemThatWasClickedId == R.id.action_search) {
-            mNewsItemViewModel.syncDb();
-            return true;
-        } else if (itemThatWasClickedId == R.id.action_clear) { // If clear was clicked, clear database only
+        if (itemThatWasClickedId == R.id.action_clear) { // If clear was clicked, clear database only
             mNewsItemViewModel.clearDb();
             return true;
         }

@@ -15,6 +15,9 @@ import net.msharma.news.andnews.utils.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for News RecyclerView.
+ */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder> {
 
     private static final String TAG = "NewsAdapter";
@@ -71,10 +74,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
         }
 
         void bind(final int listIndex) {
-            title.setText("Title : ".concat(mNews.get(listIndex).getTitle()));
-            author.setText("By : ".concat(mNews.get(listIndex).getAuthor()));
-            description.setText("Description : ".concat(mNews.get(listIndex).getDescription()));
-            publishedAt.setText("Date : ".concat(DateTimeUtils.formatDateFromString(mNews.get(listIndex).getPublishedAt())));
+            title.setText(mNews.get(listIndex).getTitle());
+            author.setText("By ".concat(mNews.get(listIndex).getAuthor()));
+            publishedAt.setText(DateTimeUtils.formatDateFromString(mNews.get(listIndex).getPublishedAt()));
+            description.setText(mNews.get(listIndex).getDescription());
             url = mNews.get(listIndex).getUrl();
             // Image url comes from 'urlToImage' key in json object of api result.
             // Using Picasso library ( http://square.github.io/picasso/ )

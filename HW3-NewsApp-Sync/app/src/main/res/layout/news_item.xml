@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/article_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="90dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
             android:adjustViewBounds="true"
@@ -61,13 +61,13 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
+            android:padding="4dp"
             android:textSize="14sp"
-            card_view:layout_constraintStart_toEndOf="@id/article_img"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/author"
-            card_view:layout_constraintBottom_toBottomOf="@id/article_img"
+            android:textStyle="bold"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/article_img"
             card_view:layout_constraintHorizontal_bias="1.0"
             card_view:layout_constraintVertical_bias="1.0" />
 
@@ -83,7 +83,7 @@
             android:textSize="14sp"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/article_img" />
+            card_view:layout_constraintTop_toBottomOf="@+id/publishedAt" />
 
     </android.support.constraint.ConstraintLayout>
 

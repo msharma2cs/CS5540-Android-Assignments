@@ -28,36 +28,37 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 
+import java.util.concurrent.TimeUnit;
+
 public class ScheduleService {
 
-    private static final int SCHEDULE_INTERVAL_SECONDS = 2;
-    private static final int SYNC_FLEXTIME_SECONDS = 2;
-    private static final String NEWS_JOB_TAG = "news_job_tag";
+    private static final String TAG = "ScheduleService";
 
-    private static boolean sInitialized;
+    private static final int SCHEDULE_INTERVAL_SECONDS = (int) (TimeUnit.SECONDS.toSeconds(10));;
+    private static final int SYNC_FLEXTIME_SECONDS = SCHEDULE_INTERVAL_SECONDS;
+    private static final String NEWS_REFRESH_JOB_TAG = "news_refresh_job_tag";
+    private static boolean sInitialized = false;
 
-    synchronized public static void scheduleRefresh(@NonNull final Context context) {
+    synchronized public static void scheduleRefreshJob(@NonNull final Context context) {
 
-        Log.d("ScheduleService", "News calling service.");
+        Log.d(TAG, "News calling ScheduleService -> scheduleRefreshJob.");
 
         if(sInitialized) return;
 
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
-        Job constraintRefreshJob = dispatcher.newJobBuilder()
+        Job newsRefreshJob = dispatcher.newJobBuilder()
                 .setService(NewsFireBaseJobService.class)
-                .setTag(NEWS_JOB_TAG)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setLifetime(Lifetime.FOREVER)
+                .setTag(NEWS_REFRESH_JOB_TAG)
                 .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(SCHEDULE_INTERVAL_SECONDS,SCHEDULE_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(true)
+                .setTrigger(Trigger.executionWindow(SCHEDULE_INTERVAL_SECONDS,SCHEDULE_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
                 .build();
 
-        dispatcher.schedule(constraintRefreshJob);
+        dispatcher.schedule(newsRefreshJob);
         sInitialized = true;
-
     }
 
 }

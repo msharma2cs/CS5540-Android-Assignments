@@ -7,6 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
+/**
+ * JSON utils class to convert json object into java objects.
+ */
 public class JsonUtils {
 
     private static final String TAG = "JsonUtils";

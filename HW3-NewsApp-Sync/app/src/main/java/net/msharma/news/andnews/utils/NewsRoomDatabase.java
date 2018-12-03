@@ -10,7 +10,7 @@ import net.msharma.news.andnews.models.NewsItem;
 /**
  * News Room Database util class for connection instance.
  */
-@Database(entities = {NewsItem.class}, version = 1)
+@Database(entities = {NewsItem.class}, version = 1, exportSchema = false)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewsItemDao newsItemDao();

@@ -9,6 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+ * Network utils class to get data from api in background using AsyncTask.
+ */
 public class NetworkUtils {
 
     private static final String TAG = "NetworkUtils";

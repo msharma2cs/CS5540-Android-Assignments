@@ -6,6 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * DateTime utils class to format date string.
+ */
 public class DateTimeUtils {
 
     private static final String TAG = "DateTimeUtils";
@@ -14,7 +17,7 @@ public class DateTimeUtils {
         String formattedDate = null;
         try {
             Date publishedAtDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(jsonDate);
-            DateFormat dateFormat = new SimpleDateFormat("MMMM dd',' yyyy 'at' hh:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("MMM dd',' yyyy 'at' hh:mm a");
             formattedDate = dateFormat.format(publishedAtDate);
         } catch ( ParseException pe ) {
             Log.d(TAG, "Date string parse exception.");
